@@ -5,7 +5,7 @@
 #include "histogram.h"
 
 std::vector<double> input_numbers(size_t count);
-std::vector<size_t> make_histogram(const std::vector<double>& numbers, size_t& bin_count);
+std::vector<size_t> make_histogram(const std::vector<double>& numbers, size_t& bin_count, std::vector<std::string>& bins_title);
 std::vector<std::string> input_bins_title(size_t bin_count);
 void scale_histogram(std::vector<size_t>& bins, size_t& max_count, size_t max_length);
 void print_histogram(const std::vector<size_t>& bins, const std::vector <std::string>& bins_title);
@@ -33,10 +33,11 @@ int main() {
     find_minmax(numbers, min_el, max_el);
 
     double bin_size = (max_el - min_el) / bin_count;
-    auto bins = make_histogram(numbers, bin_count);
 
     std::cerr << "Enter title of bins: \n";
-    const auto bins_title = input_bins_title(bin_count);
+    auto bins_title = input_bins_title(bin_count);
+
+    auto bins = make_histogram(numbers, bin_count, bins_title);
 
     double dash_length, gap_length;
     std::cerr << "Enter dash length: ";
@@ -56,7 +57,7 @@ std::vector<double> input_numbers(size_t count) {
     return result;
 }
 
-std::vector<size_t> make_histogram(const std::vector<double>& numbers, size_t& bin_count) {
+std::vector<size_t> make_histogram(const std::vector<double>& numbers, size_t& bin_count, std::vector<std::string>& bins_title) {
 
     double max_el, min_el;
     find_minmax(numbers, min_el, max_el);
@@ -79,6 +80,15 @@ std::vector<size_t> make_histogram(const std::vector<double>& numbers, size_t& b
             bins[bin_count - 1]++;
         }
     }
+
+    size_t max_length = 0;
+    for (int i = 0; i < bin_count; i++) {
+        max_length = std::max(max_length, bins_title[i].length());
+    }
+    size_t max_count = *std::max_element(bins.begin(), bins.end());
+
+    scale_histogram(bins, max_count, max_length);
+
     return bins;
 
 }
@@ -153,7 +163,7 @@ void svg_line(double x1, double y1, double x2, double y2, std::string stroke, do
 }
 
 void show_histogram_svg(const std::vector<size_t>& bins, const std::vector<std::string>& bins_title, double dash_length, double gap_length) {
-    const auto IMAGE_WIDTH = 850;
+    const auto IMAGE_WIDTH = 900;
     const auto TEXT_LEFT = 20;
     const auto TEXT_BASELINE = 20;
     const auto TEXT_WIDTH = 50;
