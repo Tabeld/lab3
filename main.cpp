@@ -177,12 +177,12 @@ void show_histogram_svg(const std::vector<size_t>& bins, const std::vector<std::
     for (int i=0; i<bins.size(); i++) {
         const double bin_width = bins[i] * BLOCK_WIDTH;
         svg_text(TEXT_LEFT, top + TEXT_BASELINE, bins_title[i]);
-        std::cout << "\n";
+        std::cout << " \n";
         svg_rect(TEXT_WIDTH, top, bin_width, BIN_HEIGHT, "black", "red");
-        std::cout << "\n";
+        std::cout << " \n";
         top += BIN_HEIGHT;
         svg_line(0, top, IMAGE_WIDTH, top, "black", 1, std::to_string(dash_length) + " " + std::to_string(gap_length));
-        std::cout << "\n";
+        std::cout << " \n";
     }
 
     svg_end();
